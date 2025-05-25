@@ -10,15 +10,15 @@ from functools import lru_cache
 def validate_inputs(domain, request_count, timeout, interval, output_folder):
     """Проверяет корректность входных данных."""
     if not domain or "." not in domain:
-        raise ValueError("Некорректный домен.")
+        raise ValueError("Invalid domain.")
     if not isinstance(request_count, int) or request_count <= 0:
-        raise ValueError("Количество запросов должно быть положительным числом.")
+        raise ValueError("The number of requests must be a positive number..")
     if not isinstance(timeout, int) or timeout <= 0:
-        raise ValueError("Таймаут должен быть положительным числом.")
+        raise ValueError("Timeout must be a positive number..")
     if not isinstance(interval, int) or interval < 0:
-        raise ValueError("Интервал должен быть положительным числом.")
+        raise ValueError("The interval must be a positive number..")
     if not output_folder.strip():
-        raise ValueError("Имя папки для сохранения не может быть пустым.")
+        raise ValueError("The save folder name cannot be empty.")
 
 
 def clear_logs(plain_text_widget):
@@ -49,7 +49,7 @@ def generate_random_values(mode):
         }
     }
     if mode not in modes:
-        raise ValueError("Неизвестный режим сканирования.")
+        raise ValueError("Unknown scan mode.")
     return modes[mode]
 
 #### SAVE DATA ABOUT DOMAINS AND SUBDOMAINS IN STRUCTURE FORMAT ####
@@ -67,7 +67,7 @@ def save_logs_to_file(structured_data, file_name, format_type):
         with open(file_path, "w", encoding="utf-8") as file:
             json.dump(structured_data, file, indent=4, ensure_ascii=False)
 
-    return f"Логи сохранены в файл: {file_path}"
+    return f"Logs saved in : {file_path}"
 
 
 
@@ -134,17 +134,17 @@ def find_and_check_subdomains(domain, request_count, timeout, interval, show_req
                                     act_file.write(f"{subdomain}\n")
                                     act_file.write(f"-{ip}\n")
                                     act_file.write(f"--status: {status_code}\n")
-                                    yield (f"Активный поддомен: {subdomain} ({ip}, status: {status_code})", "green")
+                                    yield (f"Active subdomain: {subdomain} ({ip}, status: {status_code})", "green")
                                 else:
-                                    yield (f"Поддомен недоступен: {subdomain}", "red")
+                                    yield (f"Inactive subdomain: {subdomain}", "red")
 
                 except requests.RequestException as e:
-                    yield (f"Ошибка при запросе: {e}", "red")
+                    yield (f"Request error: {e}", "red")
 
                 time.sleep(interval)
 
-            yield (f"Всего найдено зарегистрированных поддоменов: {len(registered_subdomains)}", "purple")
-            yield (f"Всего найдено активных поддоменов: {len(active_subdomains)}", "green")
+            yield (f"Total registered subdomains found: {len(registered_subdomains)}", "purple")
+            yield (f"Total active subdomains found: {len(active_subdomains)}", "green")
 
     except IOError as e:
         yield (f"Ошибка при сохранении результатов: {e}", "red")
@@ -169,9 +169,9 @@ def stop_scan(current_results, output_folder):
             for subdomain, ip in current_results.get("active_subdomains", []):
                 act_file.write(f"{subdomain} ({ip})\n")
 
-        return f"Промежуточные результаты сохранены в папке: {base_path}"
+        return f"Intermediate results are saved in the folder: {base_path}"
     except IOError as e:
-        return f"Ошибка при сохранении промежуточных результатов: {e}"
+        return f"Error saving intermediate results: {e}"
     
 #### LOAD JSON FILE AND ADD TO TREEWIDGET ####    
     
@@ -181,15 +181,15 @@ def load_json_to_tree(json_file_path):
         with open(json_file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
             if not isinstance(data, dict):
-                raise ValueError("JSON файл должен содержать объект (dict) на верхнем уровне.")
+                raise ValueError("The JSON file must contain an object (dict) at the top level.")
     except Exception as e:
-        raise ValueError(f"Ошибка загрузки JSON-файла: {e}")
+        raise ValueError(f"Error loading JSON file: {e}")
 
     tree_data = parse_dict_to_tree(data)
 
     # Проверка, что tree_data корректен
     if not tree_data or not isinstance(tree_data, list):
-        raise ValueError("Данные JSON не могут быть преобразованы в дерево.")
+        raise ValueError("JSON data cannot be converted to a tree.")
 
     return tree_data
 
@@ -246,8 +246,8 @@ def filter_and_structure_logs(logs):
     for log in logs:
         log = log.strip()
 
-        if log.startswith("Активный поддомен:"):
-            print(f"Обрабатываем строку:{log}")
+        if log.startswith("Active subdomain:"):
+            print(f"Processing the string:{log}")
             
             # Извлекаем часть после "Активный поддомен:"
             parts = log.split(": ", 1)[1]
@@ -270,11 +270,11 @@ def filter_and_structure_logs(logs):
                 "status_code": int(status_code)
             })
 
-        elif log.startswith("Поддомен недоступен:"):
+        elif log.startswith("Subdomain inactive:"):
             subdomains = log.split(": ")[1].split()
             structured_data["inactive_subdomains"].extend(subdomains)
 
-        elif log.startswith("Найден поддомен:"):
+        elif log.startswith("Subdomain found:"):
             subdomains = log.split(": ")[1].split()
             structured_data["domains"].extend(subdomains)
 
@@ -296,7 +296,7 @@ def parse_common_names(html):
 
     # Проверить, существует ли третья таблица
     if len(tables) < 3:
-        raise ValueError("Третья таблица не найдена в HTML")
+        raise ValueError("Third table not found in HTML")
 
     # Выбрать третью таблицу
     table = tables[2]  # Индекс начинается с 0
@@ -312,7 +312,7 @@ def parse_common_names(html):
             break
 
     if common_name_index == -1:
-        raise ValueError("Столбец 'Matching Identities' не найден в таблице")
+        raise ValueError("Column 'Matching Identities' not found in table")
 
     # Найти все строки с данными
     rows = table.find_all('tr')[1:]  # Пропустить заголовок таблицы

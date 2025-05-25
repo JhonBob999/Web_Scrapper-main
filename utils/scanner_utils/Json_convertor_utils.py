@@ -9,7 +9,7 @@ def load_json_file(file_path):
             data = json.load(file)
         return data
     except Exception as e:
-        raise ValueError(f"Ошибка загрузки JSON-файла: {e}")
+        raise ValueError(f"Error loading JSON file: {e}")
 
 
 def parse_json_to_tree(data, parent_item=None, treeWidgetLoadJson=None):
@@ -80,7 +80,7 @@ def tree_to_json(tree_widget):
     # Проверяем наличие корневых узлов
     root = tree_widget.invisibleRootItem()
     if root.childCount() == 0:
-        raise ValueError("Дерево пустое, нет корневых узлов для сохранения.")
+        raise ValueError("The tree is empty, there are no root nodes to save.")
 
     # Инициализация JSON-объекта
     json_data = {}

@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import QTableWidgetItem, QPushButton
 
 def update_lcd_counters(table, lcds):
     total = table.rowCount()
-    running = count_status(table, "⏳ Выполняется")
-    success = count_status(table, "✅ Успешно")
-    error = count_status(table, "❌ Ошибка")
-    stopped = count_status(table, "⏸️ Остановлено")
+    running = count_status(table, "⏳ In progress")
+    success = count_status(table, "✅ Successfully")
+    error = count_status(table, "❌ Error")
+    stopped = count_status(table, "⏸️ Stopped")
 
     lcds['total'].display(total)
     lcds['running'].display(running)
@@ -63,7 +63,7 @@ def add_task_row(table, url, selector, method, status):
     table.setItem(row_position, 3, QTableWidgetItem(method))               # Method
     table.setItem(row_position, 4, QTableWidgetItem(status))               # Status
     table.setItem(row_position, 5, QTableWidgetItem("..."))                # Action placeholder
-    table.setItem(row_position, 8, QTableWidgetItem("🛠 Настроить"))
+    table.setItem(row_position, 8, QTableWidgetItem("🛠 Tune"))
 
     # ❗ Важно: Кнопку сохранения добавляет ScraperApp
     # через table.setCellWidget(row, 6, create_save_button())
@@ -82,4 +82,4 @@ def renumber_tasks(table):
         table.setItem(i, 0, QTableWidgetItem(str(i + 1)))
 
 def create_save_button():
-    return QPushButton("💾 Сохранить")
+    return QPushButton("💾 Save")

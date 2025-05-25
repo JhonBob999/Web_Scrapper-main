@@ -18,18 +18,18 @@ async def fetch_certificate_ids(domain, log_callback=None):
     """Асинхронная функция для получения ID сертификатов."""
     try:
         if not isinstance(domain, str):
-            raise ValueError("Ожидалась строка, но получен другой тип данных")
+            raise ValueError("Expected a string but got a different data type")
 
         domain = domain.split(" ")[0]  # Удаляем IP-адреса и оставляем только домен
 
         url = CRT_SH_SEARCH_URL.format(domain=domain)
         if log_callback:
-            log_callback(f"URL для запроса сертификатов: {url}", "blue")
+            log_callback(f"URL to request certificates: {url}", "blue")
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as response:
                 if response.status != 200:
-                    raise Exception(f"Ошибка при запросе к crt.sh: {response.status}")
+                    raise Exception(f"Failed to request crt.sh: {response.status}")
 
                 html = await response.text()
                 soup = BeautifulSoup(html, 'html.parser')
@@ -42,14 +42,14 @@ async def fetch_certificate_ids(domain, log_callback=None):
 
                 if not certificates_table:
                     if log_callback:
-                        log_callback(f"Не удалось найти таблицу сертификатов для домена {domain}", "red")
+                        log_callback(f"Unable to find certificate table for domain {domain}", "red")
                     return {}
 
                 cert_ids = []
                 rows = certificates_table.find_all("tr")
                 if not rows or len(rows) <= 1:
                     if log_callback:
-                        log_callback(f"Таблица сертификатов пуста или отсутствует для домена {domain}", "red")
+                        log_callback(f"Certificate table is empty or missing for domain {domain}", "red")
                     return {}
 
                 for row in rows[1:]:  # Пропускаем заголовок таблицы
@@ -60,13 +60,13 @@ async def fetch_certificate_ids(domain, log_callback=None):
                             cert_ids.append(cert_link.text.strip())
 
                 if log_callback:
-                    log_callback(f"Найдено {len(cert_ids)} сертификатов для домена {domain}", "green")
+                    log_callback(f"Finded {len(cert_ids)} certificates for domains {domain}", "green")
 
                 return {domain: cert_ids if cert_ids else []}
 
     except Exception as e:
         if log_callback:
-            log_callback(f"Ошибка при получении сертификатов для домена {domain}: {e}", "red")
+            log_callback(f"Error getting certificates for domain {domain}: {e}", "red")
         return {}
 
 ##### PARSING CERTIFICATE FULL INFO FROM JSON FILE TO TREEWIDGET ###########
@@ -76,16 +76,16 @@ async def fetch_certificate_details(cert_id, log_callback=None):
     """Асинхронная функция для получения деталей сертификата."""
     try:
         if not isinstance(cert_id, str):
-            raise ValueError("Ожидалась строка, но получен другой тип данных")
+            raise ValueError("Expected a string but got a different data type")
 
         url = CRT_SH_CERT_URL.format(cert_id=cert_id)
         if log_callback:
-            log_callback(f"URL для запроса деталей сертификата: {url}", "blue")
+            log_callback(f"URL to request certificate details: {url}", "blue")
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as response:
                 if response.status != 200:
-                    raise Exception(f"Ошибка при запросе к сертификату: {response.status}")
+                    raise Exception(f"Error getting certificates {response.status}")
 
                 html = await response.text()
                 soup = BeautifulSoup(html, 'html.parser')
@@ -93,18 +93,18 @@ async def fetch_certificate_details(cert_id, log_callback=None):
 
                 if not cert_data:
                     if log_callback:
-                        log_callback(f"Не удалось найти данные для сертификата {cert_id}", "red")
+                        log_callback(f"Unable to find certificate {cert_id}", "red")
                     return {}
 
                 certificate_details = cert_data.text.strip()
                 if log_callback:
-                    log_callback(f"Данные для сертификата {cert_id} успешно получены.", "green")
+                    log_callback(f"Data for certificates {cert_id} successfully received.", "green")
 
                 return {"id": cert_id, "details": certificate_details}
 
     except Exception as e:
         if log_callback:
-            log_callback(f"Ошибка при получении данных для сертификата {cert_id}: {e}", "red")
+            log_callback(f"Error getting certificates {cert_id}: {e}", "red")
         return None # Вместо return {}
 
 ###### FUNCTION RESPONSIBLE FOR ANALYZE CERTIFICATE ID #############
@@ -113,7 +113,7 @@ async def fetch_certificate_details(cert_id, log_callback=None):
 async def analyze_certificates_via_crtsh_async(active_subdomains, log_callback=None, progress_callback=None):
     """Асинхронная функция для анализа сертификатов."""
     if not isinstance(active_subdomains, dict):
-        raise ValueError("Ожидался словарь поддоменов, но получен другой тип данных")
+        raise ValueError("Expected a subdomain dictionary but got a different data type")
     
     all_certificates = {}
 
@@ -123,18 +123,18 @@ async def analyze_certificates_via_crtsh_async(active_subdomains, log_callback=N
     for domain, subdomains in active_subdomains.items():
         if not isinstance(subdomains, list):
             if log_callback:
-                log_callback(f"Пропущен некорректный формат данных для домена {domain}", "orange")
+                log_callback(f"Invalid data format missing for domain {domain}", "orange")
             continue
 
         for subdomain in subdomains:
             if stop_event.is_set():
                 if log_callback:
-                    log_callback("Сканирование остановлено пользователем.", "orange")
+                    log_callback("Scanning stopped by user.", "orange")
                 return all_certificates
 
             if not isinstance(subdomain, str):
                 if log_callback:
-                    log_callback(f"Пропущен некорректный поддомен: {subdomain}", "orange")
+                    log_callback(f"Invalid subdomain missing: {subdomain}", "orange")
                 continue
 
             subdomain = subdomain.split(" ")[0]  # Удаляем IP-адреса
@@ -160,7 +160,7 @@ def analyze_certificates_via_crtsh(active_subdomains, log_callback=None, progres
 
     worker = AsyncWorker(_analyze())
     worker.finished.connect(lambda result: print(result))  # Обработка результата
-    worker.error.connect(lambda e: print(f"Ошибка: {e}"))  # Обработка ошибок
+    worker.error.connect(lambda e: print(f"ERROR: {e}"))  # Обработка ошибок
     worker.start()
 
 
@@ -173,16 +173,16 @@ def load_certificate_file(file_path, log_callback=None):
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             if not isinstance(data, dict):
-                raise ValueError("Файл должен содержать словарь данных")
+                raise ValueError("The file must contain a data dictionary.")
 
             if log_callback:
-                log_callback(f"Файл {file_path} успешно загружен. Тип данных: Dictionary", "green")
+                log_callback(f"File {file_path} successfully loaded. Data type: Dictionary", "green")
 
             return data
 
     except Exception as e:
         if log_callback:
-            log_callback(f"Ошибка загрузки файла {file_path}: {e}", "red")
+            log_callback(f"File download error {file_path}: {e}", "red")
         raise
     
 
@@ -201,11 +201,11 @@ def load_and_validate_json(file_path):
         if not isinstance(data.get("active_subdomains"), list) or \
         not isinstance(data.get("inactive_subdomains"), list) or \
         not isinstance(data.get("domains"), list):
-            raise ValueError("Структура файла JSON неверная!")
+            raise ValueError("The structure of the JSON file is incorrect!")
 
         return data
     except Exception as e:
-        raise ValueError(f"Ошибка при обработке JSON: {e}")
+        raise ValueError(f"Error while processing JSON: {e}")
     
 ##### FILL TREEWIDGETDOMAIN WITH DATA FROM JSON #######
 ##### FILL TREEWIDGETDOMAIN WITH DATA FROM JSON #######
@@ -262,26 +262,26 @@ def save_certificates_to_treewidget_domain(data, log_callback=None):
     try:
         # Открыть диалог для выбора файла сохранения
         file_path, _ = QFileDialog.getSaveFileName(
-            None, "Сохранить сертификаты", "", "JSON Files (*.json)"
+            None, "Save Certificate", "", "JSON Files (*.json)"
         )
         if not file_path:
             if log_callback:
-                log_callback("Сохранение отменено пользователем.", "orange")
+                log_callback("Saving cancaled by user.", "orange")
             return
 
         # Проверка формата данных
         if not isinstance(data, dict) or not all(isinstance(v, list) and all(isinstance(i, str) for i in v) for v in data.values()):
-            raise ValueError("Некорректный формат данных. Ожидался словарь с доменами и списками ID сертификатов.")
+            raise ValueError("Incorrect data format. Expected a dictionary with domains and certificate ID lists.")
 
         # Сохранение данных в файл
         with open(file_path, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
         if log_callback:
-            log_callback(f"Сертификаты успешно сохранены в файл: {file_path}", "green")
+            log_callback(f"Certificates successfully saved to file: {file_path}", "green")
     except Exception as e:
         if log_callback:
-            log_callback(f"Ошибка при сохранении сертификатов: {e}", "red")
+            log_callback(f"Error saving certificates: {e}", "red")
         raise
     
     

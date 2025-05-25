@@ -11,7 +11,7 @@ from core.session_service import list_sessions, load_session
 class CalendarDialog(QDialog):
     def __init__(self, parent, task_results, load_session_callback):
         super().__init__(parent)
-        self.setWindowTitle("📆 История по дате")
+        self.setWindowTitle("📆 History by date")
         self.resize(800, 500)
 
         self.task_results = task_results or {}
@@ -29,25 +29,25 @@ class CalendarDialog(QDialog):
         left_layout.addWidget(self.calendar)
 
         # Tasks list
-        self.tasks_label = QLabel("📋 Задачи на дату")
+        self.tasks_label = QLabel("📋 Tasks on date")
         self.task_list = QListWidget()
         right_layout.addWidget(self.tasks_label)
         right_layout.addWidget(self.task_list)
 
         # Sessions list
-        self.sessions_label = QLabel("💾 Сессии на дату")
+        self.sessions_label = QLabel("💾 Sessions on date")
         self.session_list = QListWidget()
         self.session_list.itemDoubleClicked.connect(self.load_selected_session)
         right_layout.addWidget(self.sessions_label)
         right_layout.addWidget(self.session_list)
 
         # Show in Table Button
-        self.show_button = QPushButton("🔍 Показать задачи в таблице")
+        self.show_button = QPushButton("🔍 Show Tasks in table")
         self.show_button.clicked.connect(self.emit_filtered_rows)
         right_layout.addWidget(self.show_button)
 
         # Close Button
-        self.close_btn = QPushButton("Закрыть")
+        self.close_btn = QPushButton("Close")
         self.close_btn.clicked.connect(self.close)
         right_layout.addWidget(self.close_btn)
 
@@ -116,7 +116,7 @@ class CalendarDialog(QDialog):
     def load_selected_session(self):
         item = self.session_list.currentItem()
         if not item:
-            QMessageBox.warning(self, "Ошибка", "Выберите сессию для загрузки")
+            QMessageBox.warning(self, "ERORR", "Choose session to load")
             return
 
         session_name = item.text()

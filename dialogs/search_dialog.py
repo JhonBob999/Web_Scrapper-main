@@ -6,7 +6,7 @@ from dialogs.base_dialog import BaseDialog
 
 class SearchDialog(BaseDialog):
     def __init__(self, parent=None, search_callback=None, initial_filters=None):
-        super().__init__(parent, title="Поиск задач")
+        super().__init__(parent, title="Find Tasks")
         self.resize(500, 400)
         self.search_callback = search_callback
         self.filter_blocks = []
@@ -18,19 +18,19 @@ class SearchDialog(BaseDialog):
         # Кнопки управления
         btn_layout = QHBoxLayout()
 
-        self.add_filter_btn = QPushButton("➕ Добавить фильтр")
+        self.add_filter_btn = QPushButton("➕ Add Filter")
         self.add_filter_btn.clicked.connect(self.add_filter_block)
         btn_layout.addWidget(self.add_filter_btn)
 
-        self.search_btn = QPushButton("🔍 Найти")
+        self.search_btn = QPushButton("🔍 Find")
         self.search_btn.clicked.connect(self.apply_search)
         btn_layout.addWidget(self.search_btn)
 
-        self.reset_btn = QPushButton("♻ Сбросить")
+        self.reset_btn = QPushButton("♻ Reset")
         self.reset_btn.clicked.connect(self.reset_search)
         btn_layout.addWidget(self.reset_btn)
 
-        self.close_btn = QPushButton("Закрыть")
+        self.close_btn = QPushButton("Close")
         self.close_btn.clicked.connect(self.reject)
         btn_layout.addWidget(self.close_btn)
 
@@ -51,7 +51,7 @@ class SearchDialog(BaseDialog):
         layout.addWidget(field_combo)
 
         value_input = QLineEdit()
-        value_input.setPlaceholderText("Введите значение для поиска")
+        value_input.setPlaceholderText("Type value for search")
         value_input.setText(str(value_text))
         layout.addWidget(value_input)
 
@@ -80,7 +80,7 @@ class SearchDialog(BaseDialog):
                 filters.append((field, value))
 
         if not filters:
-            QMessageBox.warning(self, "Нет условий", "Добавьте хотя бы один фильтр с непустым значением.")
+            QMessageBox.warning(self, "No conditions", "Add at least one filter with a non-empty value.")
             return
 
         if self.search_callback:

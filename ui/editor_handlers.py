@@ -44,14 +44,14 @@ def edit_selector_modal(parent, table, row, column):
     text = current.text() if current else ""
 
     dialog = QDialog(parent)
-    dialog.setWindowTitle("Редактировать селектор")
+    dialog.setWindowTitle("Edit Selector")
     layout = QVBoxLayout(dialog)
 
     editor = QTextEdit()
     editor.setPlainText(text)
     layout.addWidget(editor)
 
-    button = QPushButton("Сохранить")
+    button = QPushButton("Save")
     layout.addWidget(button)
     button.clicked.connect(dialog.accept)
 

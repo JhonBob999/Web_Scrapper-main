@@ -31,13 +31,13 @@ def save_cookies(url: str, cookies: dict):
 
     # 🔒 Если cookies пустые и файл уже существует — не перезаписываем
     if not cookies and os.path.exists(path):
-        print(f"[cookie_manager] Пустые куки, файл уже существует — не сохраняем: {path}")
+        print(f"[cookie_manager] Empty cookie, file already exists — don't save: {path}")
         return
 
     with open(path, "w", encoding="utf-8") as f:
         json.dump(cookies, f, indent=4, ensure_ascii=False)
 
-    print(f"[cookie_manager] Куки сохранены: {path}")
+    print(f"[cookie_manager] Cookie saved: {path}")
 
 def load_cookies(url: str):
     path = get_cookie_path(url)

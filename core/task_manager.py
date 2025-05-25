@@ -32,7 +32,7 @@ class TaskManager(QObject):
             return
 
         # Статус
-        self.table.setItem(row, 4, self._create_item("⏳ Выполняется"))
+        self.table.setItem(row, 4, self._create_item("⏳ Running"))
 
         # Last Run
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

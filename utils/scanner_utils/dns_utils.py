@@ -16,7 +16,7 @@ def find_nameservers(domain, progress_callback=None):
     except Exception as e:
         if progress_callback:
             progress_callback(0)  # Обнуление прогресса в случае ошибки
-        yield (f"Ошибка при получении NS-записей: {e}", "red")
+        yield (f"Error while getting NS records: {e}", "red")
 
 def perform_dns_zone_transfer(domain, nameservers, output_folder, progress_callback=None):
     """Выполняет передачу зоны и сохраняет логи в указанную папку."""
@@ -31,24 +31,24 @@ def perform_dns_zone_transfer(domain, nameservers, output_folder, progress_callb
             total = len(nameservers)  # Общее количество серверов имен
             for i, ns in enumerate(nameservers):
                 ns_name = ns[0] if isinstance(ns, tuple) else ns  # Извлекаем только имя, если это кортеж
-                f.write(f"Проверка передачи зоны на сервере: {ns_name}\n")
+                f.write(f"Checking zone transfer on server: {ns_name}\n")
                 if progress_callback:
                     progress = 50 + int((i + 1) / total * 50)  # Прогресс: 50-100%
                     progress_callback(progress)
-                yield (f"Проверка передачи зоны на сервере: {ns_name}", "blue")
+                yield (f"Checking zone transfer on server: {ns_name}", "blue")
                 try:
                     result = subprocess.run(['dig', 'axfr', domain, f'@{ns_name}'], stdout=subprocess.PIPE, text=True)
                     if result.returncode == 0:
                         f.write(result.stdout)
-                        yield (f"Передача зоны успешна для {ns_name}", "green")
+                        yield (f"Zone transfer successful for {ns_name}", "green")
                     else:
-                        f.write(f"Передача зоны не удалась для {ns_name}.\n")
-                        yield (f"Передача зоны не удалась для {ns_name}", "red")
+                        f.write(f"Zone transfer failed for {ns_name}.\n")
+                        yield (f"Zone transfer failed for {ns_name}", "red")
                 except subprocess.CalledProcessError as e:
-                    f.write(f"Ошибка при выполнении передачи зоны для {ns_name}: {e}\n")
-                    yield (f"Ошибка при выполнении передачи зоны для {ns_name}: {e}", "red")
+                    f.write(f"Error while executing zone transfer for {ns_name}: {e}\n")
+                    yield (f"Error while executing zone transfer for {ns_name}: {e}", "red")
     except Exception as e:
-        yield (f"Ошибка записи результатов: {e}", "red")
+        yield (f"Error writing results: {e}", "red")
 
 def save_all_logs_to_file(logs, suffix=None):
     """Сохраняет все логи в файл save_all_results_<suffix>.txt в Log_Files."""
@@ -61,9 +61,9 @@ def save_all_logs_to_file(logs, suffix=None):
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(logs) # Сохраняем переданный текст логов
-        return f"Логи сохранены в {output_file}"
+        return f"Logs saved in {output_file}"
     except IOError as e:
-        return f"Ошибка сохранения логов: {e}"
+        return f"Error saving logs: {e}"
 
 def get_a_records(domain):
     """Запрашивает A-записи (IPv4) для домена."""
@@ -71,7 +71,7 @@ def get_a_records(domain):
         result = dns.resolver.resolve(domain, 'A')
         return [(record.to_text(), "green") for record in result]
     except Exception as e:
-        return [(f"Ошибка при запросе A-записей: {e}", "red")]
+        return [(f"Error while querying A records: {e}", "red")]
 
 def get_aaaa_records(domain):
     """Запрашивает AAAA-записи (IPv6) для домена."""
@@ -79,7 +79,7 @@ def get_aaaa_records(domain):
         result = dns.resolver.resolve(domain, 'AAAA')
         return [(record.to_text(), "green") for record in result]
     except Exception as e:
-        return [(f"Ошибка при запросе AAAA-записей: {e}", "red")]
+        return [(f"Error while querying AAAA records: {e}", "red")]
 
 def get_mx_records(domain):
     """Запрашивает MX-записи (почтовые серверы) для домена."""
@@ -87,7 +87,7 @@ def get_mx_records(domain):
         result = dns.resolver.resolve(domain, 'MX')
         return [(record.exchange.to_text(), "green") for record in result]
     except Exception as e:
-        return [(f"Ошибка при запросе MX-записей: {e}", "red")]
+        return [(f"Error while querying MX records: {e}", "red")]
 
 def get_txt_records(domain):
     """Запрашивает TXT-записи для домена."""
@@ -95,7 +95,7 @@ def get_txt_records(domain):
         result = dns.resolver.resolve(domain, 'TXT')
         return [(record.to_text(), "green") for record in result]
     except Exception as e:
-        return [(f"Ошибка при запросе TXT-записей: {e}", "red")]
+        return [(f"Error while querying TXT records: {e}", "red")]
 
 def get_cname_records(domain):
     """Запрашивает CNAME-записи для домена."""
@@ -103,7 +103,7 @@ def get_cname_records(domain):
         result = dns.resolver.resolve(domain, 'CNAME')
         return [(record.to_text(), "green") for record in result]
     except Exception as e:
-        return [(f"Ошибка при запросе CNAME-записей: {e}", "red")]
+        return [(f"Error while querying CNAME records: {e}", "red")]
 
 def get_nameservers_and_length(domain):
     """Возвращает список серверов имен и их количество."""

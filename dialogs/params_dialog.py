@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QLineEdit, QLabel, QTextEdit, QSpinBox, QMessageBox
 
 class ParamsDialog(BaseDialog):
     def __init__(self, parent=None, existing_params=None):
-        super().__init__(parent, title="Настроить параметры запроса")
+        super().__init__(parent, title="Configure requests settings")
 
         existing_params = existing_params or {}
 
@@ -26,21 +26,21 @@ class ParamsDialog(BaseDialog):
         self.headers_input = QTextEdit()
         headers_text = json.dumps(existing_params.get("headers", {}), indent=4, ensure_ascii=False)
         self.headers_input.setPlainText(headers_text)
-        self.add_widget(QLabel("📦 Headers (в формате JSON)"))
+        self.add_widget(QLabel("📦 Headers (Json format)"))
         self.add_widget(self.headers_input)
 
         # Timeout
         self.timeout_input = QSpinBox()
         self.timeout_input.setRange(1, 60)
         self.timeout_input.setValue(existing_params.get("timeout", 10))
-        self.add_widget(QLabel("⏱️ Таймаут (сек)"))
+        self.add_widget(QLabel("⏱️ Timeout (sec)"))
         self.add_widget(self.timeout_input)
 
     def accept(self):
         try:
             headers = json.loads(self.headers_input.toPlainText())
         except Exception as e:
-            QMessageBox.critical(self, "Ошибка формата JSON", f"Проверьте JSON:\n{e}")
+            QMessageBox.critical(self, "Json format Erorr", f"Check JSON:\n{e}")
             return
 
         self.accepted_data = {

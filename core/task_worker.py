@@ -34,16 +34,16 @@ class TaskWorker(QThread):
             if results:
                 self.task_finished.emit(
                     self.row_index,
-                    "✅ Успешно",
-                    f"Найдено элементов: {len(results)}",
+                    "✅ Success",
+                    f"Elements finded: {len(results)}",
                     results,
                     final_cookies
                 )
             else:
                 self.task_finished.emit(
                     self.row_index,
-                    "✅ Успешно",
-                    "Элементов не найдено",
+                    "✅ Success",
+                    "Elements not find",
                     results,
                     final_cookies
                 )
@@ -52,7 +52,7 @@ class TaskWorker(QThread):
             # ⛔ В случае ошибки — пустые результаты, куки не обновляем
             self.task_finished.emit(
                 self.row_index,
-                "❌ Ошибка",
+                "❌ ERROR",
                 str(e),
                 [],
                 self.cookies

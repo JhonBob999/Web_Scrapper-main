@@ -13,8 +13,8 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         self.customContextMenuRequested.connect(self.show_context_menu)
 
         # Пример узлов
-        root = QTreeWidgetItem(self, ["Корневой узел"])
-        child = QTreeWidgetItem(root, ["Дочерний узел"])
+        root = QTreeWidgetItem(self, ["Root node"])
+        child = QTreeWidgetItem(root, ["Child node"])
         self.addTopLevelItem(root)
 
     def show_context_menu(self, position):
@@ -23,15 +23,15 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         context_menu = QMenu(self)
 
         # Подменю "Управление узлами"
-        manage_nodes_menu = context_menu.addMenu("Управление узлами")
+        manage_nodes_menu = context_menu.addMenu("Node management")
 
         # Опции подменю
-        add_action = manage_nodes_menu.addAction("Добавить узел")
-        delete_action = manage_nodes_menu.addAction("Удалить узел")
-        edit_action = manage_nodes_menu.addAction("Редактировать узел")
-        clone_action = manage_nodes_menu.addAction("Клонировать узел")
+        add_action = manage_nodes_menu.addAction("Add node")
+        delete_action = manage_nodes_menu.addAction("Delete node")
+        edit_action = manage_nodes_menu.addAction("Edit node")
+        clone_action = manage_nodes_menu.addAction("Clone node")
         # Подменю для подменю
-        advanced_menu = manage_nodes_menu.addMenu("Изменения структуры узлов")
+        advanced_menu = manage_nodes_menu.addMenu("Node structure changes")
         # Опции для дополнительного подменю
         
         # Подключаем обработчики опций
@@ -41,22 +41,22 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         clone_action.triggered.connect(lambda: self.clone_node(selected_item))
         
         # Универсальное действие "Разделить узел"
-        manage_split_nodes = context_menu.addMenu("Разделить по узлам")
+        manage_split_nodes = context_menu.addMenu("Split by nodes")
         
         # Опции подменю
-        split_action = manage_split_nodes.addAction("Разделить по тексту")
+        split_action = manage_split_nodes.addAction("Split by text")
         
         # Подключаем обработчики опций
         split_action.triggered.connect(lambda: self.split_node_by_text(selected_item))
         
         # Подменю "Управление структурой"
-        manage_structure_menu = context_menu.addMenu("Управление структурой")
+        manage_structure_menu = context_menu.addMenu("Structure management")
         
         # Опции подменю
-        expand_all_action = manage_structure_menu.addAction("Развернуть все узлы")
-        collapse_all_action = manage_structure_menu.addAction("Свернуть все узлы")
-        expand_current_action = manage_structure_menu.addAction("Развернуть текущий узел")
-        collapse_current_action = manage_structure_menu.addAction("Свернуть текущий узел")
+        expand_all_action = manage_structure_menu.addAction("Expand all nodes")
+        collapse_all_action = manage_structure_menu.addAction("Collapse all nodes")
+        expand_current_action = manage_structure_menu.addAction("Expand current node")
+        collapse_current_action = manage_structure_menu.addAction("Collapse current node")
 
         # Подключаем обработчики опций
         expand_all_action.triggered.connect(self.expandAll)
@@ -65,12 +65,12 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         collapse_current_action.triggered.connect(lambda: self.collapse_current_node(selected_item))
         
         # Подменю Работа с данными
-        manage_data_menu = context_menu.addMenu("Работа с данными")
+        manage_data_menu = context_menu.addMenu("Working with data")
         
         # Опции подменю
-        export_action  = manage_data_menu.addAction("Экспорт узла или всего дерева")
-        import_action   = manage_data_menu.addAction("Импорт данных в выбранный узел")
-        clear_action = manage_data_menu.addAction("Очистки узла или дерева")
+        export_action  = manage_data_menu.addAction("Export a node or the entire tree")
+        import_action   = manage_data_menu.addAction("Import data into the selected node")
+        clear_action = manage_data_menu.addAction("Cleaning a node or tree")
         
         # Подключение действий к обработчикам
         export_action.triggered.connect(lambda: self.export_to_json(selected_item))
@@ -78,23 +78,23 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         clear_action.triggered.connect(lambda: self.clear_node_or_tree(selected_item))
         
          # Подменю "Визуальные настройки"
-        visual_menu = context_menu.addMenu("Визуальные настройки")
+        visual_menu = context_menu.addMenu("Visual settings")
         
          # Опции подменю
-        change_color_action = visual_menu.addAction("Изменить цвет узла")
-        mark_important_action = visual_menu.addAction("Отметить как важный")
+        change_color_action = visual_menu.addAction("Change node color")
+        mark_important_action = visual_menu.addAction("Mark as important")
         
         # Подключаем обработчики опций
         change_color_action.triggered.connect(lambda: self.change_node_color(selected_item))
         mark_important_action.triggered.connect(lambda: self.mark_node_as_important(selected_item))
         
         # Подменю "Логические действия"
-        logical_menu = context_menu.addMenu("Логические действия для списков")
+        logical_menu = context_menu.addMenu("Logical operations for lists")
         
         # Опции подменю
-        search_action = logical_menu.addAction("Поиск значений в массиве")
-        filter_action = logical_menu.addAction("Фильтрация узлов по критерию")
-        highlight_action = logical_menu.addAction("Подсветка узлов по критерию")
+        search_action = logical_menu.addAction("Finding values ​​in an array")
+        filter_action = logical_menu.addAction("Filter nodes by criteria")
+        highlight_action = logical_menu.addAction("Highlighting nodes by criterion")
         
         # Подключаем обработчики опций
         search_action.triggered.connect(lambda: self.search_nodes(selected_item))
@@ -112,12 +112,12 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         if parent_item is None:
             # Если узел не выбран, добавляем на верхний уровень
             new_item = QTreeWidgetItem(self)
-            new_item.setText(0, "Новый узел")
+            new_item.setText(0, "New node")
             self.addTopLevelItem(new_item)
         else:
             # Добавляем как дочерний узел
             new_item = QTreeWidgetItem(parent_item)
-            new_item.setText(0, "Новый узел")
+            new_item.setText(0, "New node")
             parent_item.setExpanded(True)
 
     def delete_node(self, item):
@@ -140,12 +140,12 @@ class TreeWidgetWithContextMenu(QTreeWidget):
             item.setFlags(item.flags() | Qt.ItemIsEditable)  # Устанавливаем флаг редактируемости
             self.editItem(item, 0)  # Позволяет редактировать текст в колонке 0
         else:
-            print("Редактирование не удалось: узел не выбран")  # Сообщение об ошибке
+            print("Edit failed: Node not selected")  # Сообщение об ошибке
             
     def clone_node(self, item):
         """Клонирует выбранный узел и добавляет его как дочерний к тому же родителю."""
         if item is None:
-            print("Клонирование невозможно: узел не выбран")
+            print("Cloning not possible: Node not selected")
             return
 
         def clone_item(src_item):
@@ -199,15 +199,15 @@ class TreeWidgetWithContextMenu(QTreeWidget):
             # Диалог выбора символа
             symbol, ok = QInputDialog.getItem(
                 self, 
-                "Выбор символа", 
-                "Выберите символ для отметки важности:", 
+                "Selecting a symbol", 
+                "Select a symbol to mark importance:", 
                 symbols, 
                 0, 
                 False
             )
             
             if ok and symbol:
-                item.setText(0, f"{symbol} [Важно] {item.text(0)}")
+                item.setText(0, f"{symbol} [Important] {item.text(0)}")
                 item.setForeground(0, QBrush(QColor("red")))
           
 ####### WORKING WITH TREEWIDGETLOADJSON STRUCTURE ########        
@@ -218,14 +218,14 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         if item:
             item.setExpanded(True)  # Разворачивает только указанный узел
         else:
-            print("Развернуть невозможно: узел не выбран")
+            print("Unable to expand: Node not selected")
             
     def collapse_current_node(self, item):
         """Сворачивает текущий узел."""
         if item:
             item.setExpanded(False)  # Сворачивает только указанный узел
         else:
-            print("Свернуть невозможно: узел не выбран")
+            print("Unable to collapse: Node not selected")
             
 ####### METHODS WORKING WITH DATA ##########            
 ####### METHODS WORKING WITH DATA ##########
@@ -248,12 +248,12 @@ class TreeWidgetWithContextMenu(QTreeWidget):
                 data = tree_to_json(self)
 
             # Сохранение в JSON-файл
-            file_path, _ = QFileDialog.getSaveFileName(self, "Сохранить JSON", "", "JSON Files (*.json)")
+            file_path, _ = QFileDialog.getSaveFileName(self, "Save JSON", "", "JSON Files (*.json)")
             if file_path:
                 with open(file_path, 'w', encoding='utf-8') as file:
                     json.dump(data, file, indent=4, ensure_ascii=False)
         except Exception as e:
-            print(f"Ошибка при экспорте в JSON: {e}")
+            print(f"Error while exporting to JSON: {e}")
 
     def _clone_subtree(self, source_item, target_item):
         """Рекурсивно копирует узлы из одного дерева в другое."""
@@ -266,18 +266,18 @@ class TreeWidgetWithContextMenu(QTreeWidget):
     def import_to_node(self, item):
         """Импортирует данные из JSON-файла в текущий узел."""
         if not item:  # Узел не выбран
-            print("Импорт невозможен: узел не выбран")
+            print("Import failed: Node not selected")
             return
 
         # Открыть JSON-файл
-        file_path, _ = QFileDialog.getOpenFileName(self, "Открыть JSON", "", "JSON Files (*.json)")
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open JSON", "", "JSON Files (*.json)")
         if file_path:
             try:
                 with open(file_path, 'r', encoding='utf-8') as file:
                     data = json.load(file)
                 self.add_data_to_node(item, data)
             except Exception as e:
-                print(f"Ошибка при загрузке файла: {e}")
+                print(f"Error uploading file: {e}")
 
     def clear_node_or_tree(self, item):
         """Очищает выбранный узел или всё дерево."""
@@ -306,7 +306,7 @@ class TreeWidgetWithContextMenu(QTreeWidget):
     def search_nodes(self, item):
             """Поиск подузлов или значений."""
             if item:
-                query, ok = QInputDialog.getText(self, "Поиск узлов", "Введите текст для поиска:")
+                query, ok = QInputDialog.getText(self, "Search nodes", "Enter text to search:")
                 if ok and query:
                     for i in range(item.childCount()):
                         child = item.child(i)
@@ -316,7 +316,7 @@ class TreeWidgetWithContextMenu(QTreeWidget):
     def filter_nodes(self, item):
         """Фильтрация узлов по критерию с выделением несоответствующих узлов."""
         if item:
-            query, ok = QInputDialog.getText(self, "Фильтрация узлов", "Введите текст для фильтрации:")
+            query, ok = QInputDialog.getText(self, "Node filtering", "Enter text to filter:")
             if ok and query:
                 for i in range(item.childCount()):
                     child = item.child(i)
@@ -329,7 +329,7 @@ class TreeWidgetWithContextMenu(QTreeWidget):
     def highlight_nodes(self, item):
         """Подсветка узлов по критерию."""
         if item:
-            query, ok = QInputDialog.getText(self, "Подсветка узлов", "Введите текст для подсветки:")
+            query, ok = QInputDialog.getText(self, "Illumination of nodes", "Enter text to highlight:")
             if ok and query:
                 for i in range(item.childCount()):
                     child = item.child(i)
@@ -351,7 +351,7 @@ class TreeWidgetWithContextMenu(QTreeWidget):
             return
 
         # Запрашиваем текст для разделения
-        split_text, ok = QInputDialog.getText(self, "Разделить узел", "Введите текст для разделения:")
+        split_text, ok = QInputDialog.getText(self, "Split node", "Enter text to split:")
         if not ok or not split_text.strip() or split_text not in value:
             return
 
@@ -364,7 +364,7 @@ class TreeWidgetWithContextMenu(QTreeWidget):
         # Определяем родителя узла для добавления нового узла
         parent = item.parent().parent() if item.parent() else self
 
-        # Создаем новый узел на уровне родителя
+        # Создаем New node на уровне родителя
         new_item = QTreeWidgetItem(parent)
         new_item.setText(0, match.strip())
 

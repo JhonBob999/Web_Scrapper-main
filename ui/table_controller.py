@@ -34,7 +34,7 @@ class TableController:
     def apply_filters(self, filters: list):
         """
         Применяет список фильтров к таблице.
-        Пример: [("URL", "cnn"), ("Status", "Ошибка")]
+        Пример: [("URL", "cnn"), ("Status", "ERROR")]
         """
         col_map = {
             "URL": 1,

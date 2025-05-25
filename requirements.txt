@@ -53,3 +53,4 @@ webdriver-manager
 websocket-client
 wsproto
 yarl
+pandas

@@ -23,7 +23,7 @@ class AnalyticsDialog(QDialog):
 
         # Фильтрация по статусу
         self.status_filter_combo = QComboBox()
-        self.status_filter_combo.addItems(["Все", "✅ Успешно", "❌ Ошибка", "⏳ Выполняется", "⏸️ Остановлено"])
+        self.status_filter_combo.addItems(["Все", "✅ Success", "❌ ERROR", "⏳ In Progress", "⏸️ Stopped"])
         self.status_filter_combo.currentIndexChanged.connect(self.update_chart)
         self.layout.addWidget(self.status_filter_combo)
         
@@ -37,7 +37,7 @@ class AnalyticsDialog(QDialog):
         self.save_button.setEnabled(False)  # пока график не построен
         btn_layout.addWidget(self.save_button)
 
-        self.close_button = QPushButton("Закрыть")
+        self.close_button = QPushButton("Close")
         self.close_button.clicked.connect(self.close)
         btn_layout.addWidget(self.close_button)
 
@@ -83,11 +83,11 @@ class AnalyticsDialog(QDialog):
             counts.append(len(results))
 
         if not labels:
-            ax.text(0.5, 0.5, "Нет данных для отображения", ha="center", va="center", fontsize=12)
+            ax.text(0.5, 0.5, "No data to show", ha="center", va="center", fontsize=12)
         else:
             ax.bar(labels, counts, color="skyblue")
-            ax.set_title("Количество результатов по задачам")
-            ax.set_ylabel("Найдено элементов")
+            ax.set_title("Number of results by tasks")
+            ax.set_ylabel("Elements finded")
             ax.set_xticklabels(labels, rotation=30, ha="right")
 
         ax.grid(True)
@@ -97,7 +97,7 @@ class AnalyticsDialog(QDialog):
     def save_chart(self):
         file_path, _ = QFileDialog.getSaveFileName(
             self,
-            "Сохранить график как PNG",
+            "Save graphic in PNG",
             "chart.png",
             "PNG Files (*.png)"
         )
@@ -107,9 +107,9 @@ class AnalyticsDialog(QDialog):
 
         try:
             self.canvas.figure.savefig(file_path, format="png")
-            QMessageBox.information(self, "Готово", f"График сохранён в:\n{file_path}")
+            QMessageBox.information(self, "Done", f"Graphic saved in:\n{file_path}")
         except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить график:\n{str(e)}")
+            QMessageBox.critical(self, "ERROR", f"Failed to save graphic:\n{str(e)}")
             
     def update_chart(self):
         chart_type = self.chart_type_combo.currentText()
@@ -123,7 +123,7 @@ class AnalyticsDialog(QDialog):
                 continue
 
             status = task.get("status", "")
-            if selected_status == "Все" or selected_status in status:
+            if selected_status == "All" or selected_status in status:
                 filtered_rows.append(row)
 
         # Выбор графика
@@ -170,12 +170,12 @@ class AnalyticsDialog(QDialog):
             labels.append(short)
 
         if not times:
-            ax.text(0.5, 0.5, "Нет данных для графика", ha="center", va="center")
+            ax.text(0.5, 0.5, "No data for graphic", ha="center", va="center")
         else:
             ax.plot(times, counts, marker="o", color="green")
-            ax.set_title("Результаты по времени запуска")
-            ax.set_xlabel("Время")
-            ax.set_ylabel("Кол-во найденных элементов")
+            ax.set_title("Startup time results")
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Number of elements found")
             ax.grid(True)
 
         self.canvas.draw()
@@ -192,11 +192,11 @@ class AnalyticsDialog(QDialog):
             task = self.task_results.get(row)
             if not task:
                 continue
-            status = task.get("status", "Неизвестно").strip()
+            status = task.get("status", "Unknown").strip()
             status_counts[status] = status_counts.get(status, 0) + 1
 
         if not status_counts:
-            ax.text(0.5, 0.5, "Нет данных для построения диаграммы", ha="center", va="center")
+            ax.text(0.5, 0.5, "No data to plot chart", ha="center", va="center")
         else:
             labels = list(status_counts.keys())
             sizes = list(status_counts.values())
@@ -208,7 +208,7 @@ class AnalyticsDialog(QDialog):
                 startangle=90,
                 wedgeprops=dict(edgecolor='white')
             )
-            ax.set_title("Распределение задач по статусу")
+            ax.set_title("Distribution of tasks by status")
 
         self.canvas.draw()
         self.save_button.setEnabled(True)

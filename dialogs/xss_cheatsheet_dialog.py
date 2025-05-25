@@ -44,13 +44,13 @@ class XssCheatsheetDialog(QDialog):
                 html += f"<p><b>Описание:</b><br>{data['description']}</p>"
 
                 if data.get("where"):
-                    html += "<p><b>Где искать:</b><ul>"
+                    html += "<p><b>Where to find:</b><ul>"
                     for item in data["where"]:
                         html += f"<li>{item}</li>"
                     html += "</ul></p>"
 
                 if data.get("payloads"):
-                    html += "<p><b>Примеры payload'ов:</b><pre>"
+                    html += "<p><b>Payload examples:</b><pre>"
                     for item in data["payloads"]:
                         html += f"{html_utils.escape(item)}\n"
                     html += "</pre></p>"

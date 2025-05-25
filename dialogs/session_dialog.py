@@ -4,7 +4,7 @@ from core import session_service
 class SessionHistoryDialog(QDialog):
     def __init__(self, parent=None, load_callback=None):
         super().__init__(parent)
-        self.setWindowTitle("История сессий")
+        self.setWindowTitle("Sessions History")
         self.resize(600, 400)
         self.load_callback = load_callback
 
@@ -13,21 +13,21 @@ class SessionHistoryDialog(QDialog):
         # Таблица сессий
         self.table = QTableWidget()
         self.table.setColumnCount(3)
-        self.table.setHorizontalHeaderLabels(["Сессия", "Дата", "Задач"])
+        self.table.setHorizontalHeaderLabels(["Session", "Date", "Task"])
         layout.addWidget(self.table)
 
         # Кнопки
         btn_layout = QHBoxLayout()
 
-        self.load_button = QPushButton("📂 Загрузить")
+        self.load_button = QPushButton("📂 Load")
         self.load_button.clicked.connect(self.load_selected_session)
         btn_layout.addWidget(self.load_button)
 
-        self.delete_button = QPushButton("🗑 Удалить")
+        self.delete_button = QPushButton("🗑 Delete")
         self.delete_button.clicked.connect(self.delete_selected_session)
         btn_layout.addWidget(self.delete_button)
 
-        self.close_button = QPushButton("Закрыть")
+        self.close_button = QPushButton("Close")
         self.close_button.clicked.connect(self.close)
         btn_layout.addWidget(self.close_button)
 
@@ -58,7 +58,7 @@ class SessionHistoryDialog(QDialog):
     def load_selected_session(self):
         path = self.get_selected_path()
         if not path:
-            QMessageBox.warning(self, "Ошибка", "Выберите сессию для загрузки")
+            QMessageBox.warning(self, "Error", "Choose session to load")
             return
 
         session = session_service.load_session(path)
@@ -69,10 +69,10 @@ class SessionHistoryDialog(QDialog):
     def delete_selected_session(self):
         path = self.get_selected_path()
         if not path:
-            QMessageBox.warning(self, "Ошибка", "Выберите сессию для удаления")
+            QMessageBox.warning(self, "Error", "Choose session to delete")
             return
 
-        confirm = QMessageBox.question(self, "Подтверждение", "Удалить выбранную сессию?", QMessageBox.Yes | QMessageBox.No)
+        confirm = QMessageBox.question(self, "Accepting", "Delete choosen session?", QMessageBox.Yes | QMessageBox.No)
         if confirm == QMessageBox.Yes:
             session_service.delete_session(path)
             self.refresh_table()

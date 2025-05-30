@@ -51,7 +51,9 @@ class ScraperApp(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
-        from core.exploit_loader import load_all_exploits, import_exploit_function
+        #CVE TEST COMMENT
+        
+        """from core.exploit_loader import load_all_exploits, import_exploit_function
 
         exploits = load_all_exploits()
         print("Loaded exploits:")
@@ -64,7 +66,7 @@ class ScraperApp(QMainWindow):
                 print(f"  [Check] Vulnerable: {result}")
             if run_func and result:
                 out = run_func("127.0.0.1")
-                print(f"  [Exploit] Result: {out}")
+                print(f"  [Exploit] Result: {out}")"""
 
         # Calendar Widget
         self.ui.action_open_calendar.triggered.connect(self.open_calendar_dialog)

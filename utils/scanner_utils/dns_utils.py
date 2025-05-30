@@ -20,7 +20,7 @@ def find_nameservers(domain, progress_callback=None):
 
 def perform_dns_zone_transfer(domain, nameservers, output_folder, progress_callback=None):
     """Выполняет передачу зоны и сохраняет логи в указанную папку."""
-    base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper/data/dns"
+    base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper-main/Web_Scrapper-main/data/dns/"
     os.makedirs(base_log_path, exist_ok=True)  # Создаем основную папку, если ее нет
     output_folder = os.path.join(base_log_path, output_folder)
     os.makedirs(output_folder, exist_ok=True)  # Создаем подкаталог для логов
@@ -52,7 +52,7 @@ def perform_dns_zone_transfer(domain, nameservers, output_folder, progress_callb
 
 def save_all_logs_to_file(logs, suffix=None):
     """Сохраняет все логи в файл save_all_results_<suffix>.txt в Log_Files."""
-    base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper/data/dns"
+    base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper-main/Web_Scrapper-main/data/dns/"
     os.makedirs(base_log_path, exist_ok=True)
 
     # Формируем имя файла

@@ -128,7 +128,7 @@ class DnsScanner(QMainWindow):
             QMessageBox.warning(self, "Ошибка", "Имя папки для сохранения логов не указано!")
             return
 
-        base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper/data/dns"
+        base_log_path = "C:/Users/rusla/Desktop/Web_Scrapper-main/Web_Scrapper-main/data/dns/"
         os.makedirs(base_log_path, exist_ok=True)
         output_path = os.path.join(base_log_path, output_folder)
         os.makedirs(output_path, exist_ok=True)
